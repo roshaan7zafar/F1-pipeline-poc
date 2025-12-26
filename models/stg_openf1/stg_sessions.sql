@@ -13,4 +13,4 @@ SELECT
     gmt_offset::string              as gmt_offset,
     year::number                    as year 
 
-FROM {{ source('raw_openf1','OPENF1_SESSIONS') }}
+FROM {{ source('raw_openf1','OPENF_1_SESSIONS') }}

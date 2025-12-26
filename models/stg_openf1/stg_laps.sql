@@ -11,7 +11,7 @@ WITH base AS (
         try_to_decimal(lap_duration,9,3)        as lap_time_s_raw,
         is_pit_out_lap::boolean                 as is_pit_out_lap
 )
-FROM {{ source('raw_openf1','OPENF1_LAPS') }}
+FROM {{ source('raw_openf1','OPENF_1_LAPS') }}
 
 SELECT
     * ,

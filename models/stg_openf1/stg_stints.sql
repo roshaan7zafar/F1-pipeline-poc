@@ -7,4 +7,4 @@ select
   compound::string       as compound,
   lap_start::number      as lap_start,
   lap_end::number        as lap_end
-from {{ source('raw_openf1','OPENF1_STINTS') }}
+from {{ source('raw_openf1','OPENF_1_STINTS') }}

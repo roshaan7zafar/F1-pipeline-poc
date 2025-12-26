@@ -42,18 +42,18 @@ models:
     stg_openf1:
       +tags: stg
       +materialized: view
-      +schema: "{{ 'STAG' if target.name in ['staging','prod'] else target.schema }}"
+      +schema: "{{ 'STAG' if target.name in ['stag','prod'] else target.schema }}"
 
     int_openf1:
       +tags: ["int"]
       +materialized: view
-      +schema: "{{ 'STAG' if target.name in ['staging','prod'] else target.schema }}"
+      +schema: "{{ 'STAG' if target.name in ['stag','prod'] else target.schema }}"
 
     marts_openf1:
       +tags: ["mart"]
       +materialized: table
       +schema: >
         {{ 'PROD' if target.name == 'prod'
-           else ('STAG' if target.name == 'staging'
+           else ('STAG' if target.name == 'stag'
                  else target.schema) }}
 

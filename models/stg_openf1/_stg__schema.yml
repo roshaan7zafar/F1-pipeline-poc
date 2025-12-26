@@ -1,0 +1,26 @@
+version: 2
+models:
+  - name: stg_sessions
+    columns:
+    - name: session_key
+      tests: [unique, not_null]
+
+  - name: stg_drivers
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+        combination_of_columns: [session_keys, driver_key]
+  
+  - name: stg_laps
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+        combination_of_columns: [session_key, driver_number, lap_number]
+      
+  - name: stg_stints
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+        combination_of_columns: [session_key, driver_number, stint_number]
+
+  - name: stg_pit
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [session_key, driver_number, lap_number, pit_time_utc]

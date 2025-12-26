@@ -2,6 +2,6 @@
   {%- if custom_schema_name is none -%}
     {{ target.schema }}
   {%- else -%}
-    {{ custom_schema_name }}   -- do NOT append target.schema
+    {{ custom_schema_name }}  
   {%- endif -%}
 {%- endmacro %}

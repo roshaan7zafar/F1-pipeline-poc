@@ -4,7 +4,7 @@ with laps as (
   select * from {{ ref('stg_laps') }}
 ),
 drivers as (
-  select session_key, driver_number, full_name, name_acronym, team_name, team_colour
+  select session_key, driver_number, full_name, name_acronym, team_name, team_color
   from {{ ref('stg_drivers') }}
 )
 select

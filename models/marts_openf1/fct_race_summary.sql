@@ -35,7 +35,7 @@ stints as (
 drivers as (
   select
     {{ dbt_utils.generate_surrogate_key(['session_key','driver_number']) }} as driver_sk,
-    session_key, driver_number, full_name, name_acronym, team_name, team_colour
+    session_key, driver_number, full_name, name_acronym, team_name, team_color
   from {{ ref('dim_driver') }}
 )
 select
@@ -46,7 +46,7 @@ select
   d.full_name,
   d.name_acronym,
   d.team_name,
-  d.team_colour,
+  d.team_color,
 
   -- pace
   p.laps_clean,

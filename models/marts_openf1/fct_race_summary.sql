@@ -72,4 +72,4 @@ join drivers d
 left join pit pt
   on pt.session_key = rs.session_key and pt.driver_number = d.driver_number
 left join stints st
-  on st.session_key = rs.session_key and st.driver_number = d.driver_number;
+  on st.session_key = rs.session_key and st.driver_number = d.driver_number

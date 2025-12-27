@@ -9,4 +9,4 @@ left join {{ ref('dim_meeting') }} m on m.meeting_key = f.meeting_key
 left join {{ ref('stg_sessions') }} s on s.session_key = f.session_key  -- use stg if no dim_session
 where d.driver_sk is null
    or m.meeting_key is null
-   or s.session_key is null;
+   or s.session_key is null

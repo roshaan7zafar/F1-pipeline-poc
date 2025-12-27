@@ -10,8 +10,9 @@ WITH base AS (
         try_to_decimal(duration_sector_3,9,3)   as s3_s,
         try_to_decimal(lap_duration,9,3)        as lap_time_s_raw,
         is_pit_out_lap::boolean                 as is_pit_out_lap
+    FROM {{ source('raw_openf1','OPENF_1_LAPS') }}
+    
 )
-FROM {{ source('raw_openf1','OPENF_1_LAPS') }}
 
 SELECT
     * ,
@@ -19,3 +20,14 @@ SELECT
             case when s1_s is not null and s2_s is not null and s3_s is not null
             then s1_s + s2_s + s3_s end) as lap_time_s
 FROM base
+
+-- select
+--   *,
+--   coalesce(
+--     lap_time_s_raw,
+--     case
+--       when s1_s is not null and s2_s is not null and s3_s is not null
+--         then s1_s + s2_s + s3_s
+--     end
+--   ) as lap_time_s
+-- from base;

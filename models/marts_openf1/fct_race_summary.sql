@@ -6,30 +6,29 @@ with race_sessions as (
   where lower(session_type) = 'race'
 ),
 pace as (
-  -- driver-session lap pace rollups (already filtered to clean laps upstream)
   select session_key, driver_number, laps_clean, best_lap_s, median_lap_s, lap_stddev_s
   from {{ ref('int_driver_session_rollups') }}
 ),
-pit as (
-  -- pit aggregates per driver-session
-  select
-    session_key,
-    driver_number,
-    count(*)                              as pit_stops,
-    avg(pit_duration_s)                   as avg_pit_s,
-    min(pit_duration_s)                   as best_pit_s
-  from {{ ref('stg_pit') }}
-  group by 1,2
-),
 stints as (
-  -- tire strategy per driver-session
   select
     session_key,
     driver_number,
     count(*) as stint_count,
-    listagg(distinct coalesce(compound,'UNKNOWN'), ', ')
-      within group (order by compound)   as compounds_used
+    array_to_string(
+      array_sort(array_agg(distinct coalesce(compound,'UNKNOWN'))),
+      ', '
+    ) as compounds_used
   from {{ ref('stg_stints') }}
+  group by 1,2
+),
+pit as (
+  select
+    session_key,
+    driver_number,
+    count(*)            as pit_stops,
+    avg(pit_duration_s) as avg_pit_s,
+    min(pit_duration_s) as best_pit_s
+  from {{ ref('stg_pit') }}
   group by 1,2
 ),
 drivers as (

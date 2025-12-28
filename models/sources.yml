@@ -1,0 +1,11 @@
+version: 2
+sources:
+  - name: raw_openf1
+    database: F1_ANALYTICS_DEV
+    schema: RAW
+    tables:
+      - name: OPENF_1_SESSIONS
+      - name: OPENF_1_DRIVERS
+      - name: OPENF_1_LAPS
+      - name: OPENF_1_PIT
+      - name: OPENF_1_STINTS

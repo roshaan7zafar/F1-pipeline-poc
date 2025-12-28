@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  # int_laps_enriched  (grain: session_key, driver_number, lap_number)
+  - name: int_laps_enriched
+    description: "Laps joined with driver attributes + clean-lap flag."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [session_key, driver_number, lap_number]
+    columns:
+      - name: session_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_sessions')
+                field: session_key
+      - name: driver_number
+        tests:
+          - not_null
+          # NOTE: relationships on driver_number alone is *not* scoped by session.
+          # We skip it here to avoid false positives. Composite key is enforced above.
+      - name: lap_number
+        tests: [not_null]
+      - name: lap_time_s
+        description: "Final lap time in seconds (raw or S1+S2+S3)."
+
+  # int_pit_enriched  (grain: session_key, driver_number, lap_number, pit_time_utc)
+  - name: int_pit_enriched
+    description: "Pit events with stop sequence per driver in session."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [session_key, driver_number, lap_number, pit_time_utc]
+    columns:
+      - name: session_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_sessions')
+                field: session_key
+      - name: driver_number
+        tests:
+          - not_null
+          # See note above re: composite key enforcement.
+      - name: lap_number
+        tests: [not_null]
+      - name: pit_time_utc
+        tests: [not_null]
+      - name: stop_seq
+        description: "1..N per (session_key, driver_number) ordered by pit_time_utc."
+
+  # int_driver_session_rollups  (grain: session_key, driver_number)
+  - name: int_driver_session_rollups
+    description: "Clean-lap aggregates per driver-session (pace & consistency)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [session_key, driver_number]
+    columns:
+      - name: session_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_sessions')
+                field: session_key
+      - name: driver_number
+        tests:
+          - not_null
+      - name: laps_clean
+        tests: [not_null]
+      - name: best_lap_s
+        tests: [not_null]
+      - name: median_lap_s
+        tests: [not_null]
